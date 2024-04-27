@@ -56,11 +56,6 @@ const CharacterCreationComponent = () => {
     }
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    console.log('Character Created:', { name, age, gender, countryOfOrigin, height, hair, eyeColor, bodyType });
-  };
-
   const handleSelectChange = (selectedOption, action) => {
     if (action.name === 'gender') {
       setGender(selectedOption);
@@ -79,6 +74,23 @@ const CharacterCreationComponent = () => {
       ...prev,
       [colorType]: !prev[colorType]
     }));
+  };
+
+  const downloadCharacterData = (data) => {
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "characterData.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    const characterData = { name, age, gender: gender ? gender.label : null, countryOfOrigin: countryOfOrigin.map(option => option.label), height, hair, eyeColor, bodyType };
+    downloadCharacterData(characterData);
   };
 
   return (
@@ -123,7 +135,7 @@ const CharacterCreationComponent = () => {
       </div>
       <div className="form-row">
         <label>
-          Height (please enter in cm):
+          Height (in cm):
           <input type="number" value={height} onChange={e => handleInputChange(e, setHeight)} />
         </label>
         <label>
@@ -160,8 +172,8 @@ const CharacterCreationComponent = () => {
           Hair Color:
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <button type="button" onClick={() => handleColorPickerToggle('hair')}>Select Color</button>
-            <div className="color-display" style={{ backgroundColor: hair.color }}></div>
-          </div>
+            <div className="color-display" style={{ backgroundColor: hair.color }}></div
+          ></div>
           <ReactModal 
             isOpen={showColorPicker.hair}
             onRequestClose={() => handleColorPickerToggle('hair')}
@@ -183,7 +195,7 @@ const CharacterCreationComponent = () => {
             onChange={(selectedOption) => setHair({ ...hair, style: selectedOption.value })}
             options={hairStyleOptions}
             placeholder="Select Hair Style"
-            isSearchable={true} // Enable searching
+            isSearchable={true}
             styles={customStyles}
           />
         </label>

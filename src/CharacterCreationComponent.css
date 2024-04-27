@@ -40,11 +40,12 @@ textarea {
   margin-top: 5px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
+  font-size: inherit; 
 }
   
 textarea {
-  height: 100px;
+  height: 120px;
   resize: vertical; 
 }
   
@@ -53,6 +54,7 @@ button {
   color: #333;
   border: 1px solid #ccc;
   padding: 8px;
+  margin-top: 5px;
   border-radius: 4px;
   cursor: pointer;
   font-size: inherit;
@@ -124,6 +126,6 @@ button:focus {
   height: 35px;
   border: 1px solid #ddd;
   display: inline-block; 
-  margin-top: 10px;
+  margin-top: 5px;
   vertical-align: middle; 
 }
