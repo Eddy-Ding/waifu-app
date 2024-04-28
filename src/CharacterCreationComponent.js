@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import ReactModal from 'react-modal';
-import { countryOptions, genderOptions, hairLengthOptions, hairStyleOptions, bodyTypeOptions } from './CharacterOptions.js';
+import { useCharacter } from './CharacterContext.js'
 import { ChromePicker } from 'react-color';
+import { countryOptions, genderOptions, hairLengthOptions, hairStyleOptions, bodyTypeOptions } from './CharacterOptions.js';
 import './CharacterCreationComponent.css';
 
 ReactModal.setAppElement('#root');
 
 const CharacterCreationComponent = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [age, setAge] = useState(18);
   const [gender, setGender] = useState(null);
@@ -76,21 +80,58 @@ const CharacterCreationComponent = () => {
     }));
   };
 
-  const downloadCharacterData = (data) => {
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = "characterData.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleSubmit = async event => {
+    event.preventDefault();
+    await textToImage();
+    navigate('/character-display')
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    const characterData = { name, age, gender: gender ? gender.label : null, countryOfOrigin: countryOfOrigin.map(option => option.label), height, hair, eyeColor, bodyType };
-    downloadCharacterData(characterData);
+  const { updateCharacterImage } = useCharacter();
+
+  const textToImage = async () => {
+    const path = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image";
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': "application/json",
+      'Authorization': "Bearer sk-mdinf40LfWHgFO3I3OO46ywesDj7MRX30JXaEkzuXHtsI9cq"
+    };
+
+    const countryList = countryOfOrigin.map(c => c.label).join(" and ");
+    const description = `A ${age} year old ${gender ? gender.label : 'person'} from ${countryList}, ${height} cm, ${hair.color} ${hair.length ? hair.length.label : ''} ${hair.style ? hair.style.label : ''} hair, ${eyeColor} eyes, ${bodyType}`;
+    const body = {
+      steps: 40,
+      width: 1024,
+      height: 1024,
+      seed: 0,
+      cfg_scale: 25,
+      samples: 1,
+      style_preset: "photographic",
+      text_prompts: [
+        {
+          "text": description,
+          "weight": 1
+        }
+      ],
+    };
+
+    const response = await fetch(path, {
+      headers,
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Non-200 response: ${await response.text()}`)
+    }
+
+    const responseJSON = await response.json();
+    let imageData = [];
+    
+    responseJSON.artifacts.forEach((image, index) => {
+      imageData.push(image.base64);
+    });
+
+    updateCharacterImage(imageData[0]);
   };
 
   return (
