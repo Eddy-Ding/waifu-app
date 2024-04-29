@@ -1,7 +1,7 @@
 html, body {
     height: 100%;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .chat-container {
@@ -18,7 +18,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} 
 
 .chat-area {
     flex: 3;
@@ -26,28 +26,56 @@ html, body {
     flex-direction: column;
     justify-content: space-between;
     padding: 0 20px 20px 20px;
-    overflow: auto;
-    background-color: #808080;
+    overflow: hidden;
+    background-color: #000000;
+}
+
+.message-container {
+    flex: 1; 
+    overflow-y: auto; 
+    margin: 10px 0; 
 }
 
 .message-input-container {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    margin-top: auto; 
+    display: grid;
+    grid-template-columns: auto 50px 50px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    width: 100%; 
 }
 
 input {
-    width: 90%;
-    height: 100%;
-    margin-top: 10px;
+    grid-column: 1 / 2; 
 }
 
 button {
-    width: 4%;
-    height: 120%;
-    margin-top: 10px;
-    cursor: pointer;
+    grid-column: auto; 
+}
+
+.message-container::-webkit-scrollbar {
+    width: 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.message-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.message-container:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.message-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.message-container:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.05);
 }
 
 .message {
@@ -61,25 +89,12 @@ button {
 
 .user-message {
     margin-left: auto;
-    background-color: #dcf8c6;
+    background-color: #146eff;
+    color: white;
 }
 
 .assistant-message {
     margin-right: auto;
-    background-color: #ffffff; 
-}
-
-.settings-container {
-    display: flex;
-    justify-content:flex-end;
-    padding: 10px; 
-}
-
-.settings-button {
-    font-size: 20px;
-    width: 4%;
-    height: 4%;
-    cursor: pointer;
-    background: transparent;
-    border: none;
+    background-color: #323232; 
+    color: white;
 }
