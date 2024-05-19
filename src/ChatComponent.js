@@ -7,7 +7,7 @@ const ChatComponent = () => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
-    const { characterImage } = useCharacter();
+    const { characterImage, characterDescription } = useCharacter();
 
     const handleSettingsClick = () => {
         console.log('Settings button clicked');
@@ -52,7 +52,7 @@ const ChatComponent = () => {
                 {
                     model: "gpt-3.5-turbo",
                     messages: [
-                        { role: 'system', content: 'You are a helpful assistant.' },
+                        { role: 'system', content: "you are my loving significant other and" + characterDescription },
                         { role: 'user', content: input },
                     ],
                 },

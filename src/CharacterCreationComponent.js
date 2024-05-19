@@ -86,7 +86,7 @@ const CharacterCreationComponent = () => {
     navigate('/character-display')
   };
 
-  const { updateCharacterImage } = useCharacter();
+  const { updateCharacterImage, updateCharacterDescription } = useCharacter();
 
   const textToImage = async () => {
     const path = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image";
@@ -97,7 +97,7 @@ const CharacterCreationComponent = () => {
     };
 
     const countryList = countryOfOrigin.map(c => c.label).join(" and ");
-    const description = `A ${age} year old ${gender ? gender.label : 'person'} from ${countryList}, ${height} cm, ${hair.color} ${hair.length ? hair.length.label : ''} ${hair.style ? hair.style.label : ''} hair, ${eyeColor} eyes, ${bodyType}`;
+    const description = `Generate a person with the following features: Age: ${age}, Gender: ${gender ? gender.label : 'person'}, Country: ${countryList}, Height: ${height} cm, Ensure hair color is ${hair.color}, Ensure hair length is ${hair.length ? hair.length.label : ''}, Ensure hair style is ${hair.style ? hair.style.label : ''}, Ensure eye color is ${eyeColor}, Ensure body type is ${bodyType}`;
     const body = {
       steps: 40,
       width: 1024,
@@ -132,6 +132,7 @@ const CharacterCreationComponent = () => {
     });
 
     updateCharacterImage(imageData[0]);
+    updateCharacterDescription(description);
   };
 
   return (
@@ -140,11 +141,11 @@ const CharacterCreationComponent = () => {
       <div className="form-row">
         <label>
           Name:
-          <input type="text" value={name} onChange={e => handleInputChange(e, setName)} />
+          <input type="text" value={name} onChange={e => handleInputChange(e, setName)} required />
         </label>
         <label>
           Age:
-          <input type="number" value={age} min="18" onChange={e => handleInputChange(e, setAge)} />
+          <input type="number" value={age} min="18" onChange={e => handleInputChange(e, setAge)} required />
         </label>
       </div>
       <div className="form-row">
@@ -158,6 +159,7 @@ const CharacterCreationComponent = () => {
             placeholder="Select Gender"
             isSearchable={false}
             styles={customStyles}
+            required
           />
         </label>
         <label>
@@ -171,13 +173,14 @@ const CharacterCreationComponent = () => {
             isMulti
             closeMenuOnSelect={false}
             styles={customStyles}
+            required
           />
         </label>
       </div>
       <div className="form-row">
         <label>
           Height (in cm):
-          <input type="number" value={height} onChange={e => handleInputChange(e, setHeight)} />
+          <input type="number" value={height} onChange={e => handleInputChange(e, setHeight)} required />
         </label>
         <label>
           Eye Color:
@@ -207,14 +210,15 @@ const CharacterCreationComponent = () => {
             options={hairLengthOptions}
             placeholder="Select Hair Length"
             styles={customStyles}
+            required
           />
         </label>
         <label>
           Hair Color:
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <button type="button" onClick={() => handleColorPickerToggle('hair')}>Select Color</button>
-            <div className="color-display" style={{ backgroundColor: hair.color }}></div
-          ></div>
+            <div className="color-display" style={{ backgroundColor: hair.color }}></div>
+          </div>
           <ReactModal 
             isOpen={showColorPicker.hair}
             onRequestClose={() => handleColorPickerToggle('hair')}
@@ -238,6 +242,7 @@ const CharacterCreationComponent = () => {
             placeholder="Select Hair Style"
             isSearchable={true}
             styles={customStyles}
+            required
           />
         </label>
         <label>
@@ -250,6 +255,7 @@ const CharacterCreationComponent = () => {
             placeholder="Select Body Type"
             isSearchable={true}
             styles={customStyles}
+            required
           />
         </label>
       </div>
