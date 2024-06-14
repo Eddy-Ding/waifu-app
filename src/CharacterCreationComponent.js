@@ -93,7 +93,7 @@ const CharacterCreationComponent = () => {
     const headers = {
       'Content-Type': 'application/json',
       'Accept': "application/json",
-      'Authorization': "Bearer sk-mdinf40LfWHgFO3I3OO46ywesDj7MRX30JXaEkzuXHtsI9cq"
+      'Authorization': "Bearer "
     };
 
     const countryList = countryOfOrigin.map(c => c.label).join(" and ");
